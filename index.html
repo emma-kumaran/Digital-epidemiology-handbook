@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Epidemiology Reflection</title>
+  <style>
+    :root { --ink:#17324d; --muted:#587086; --blue:#246b8f; --teal:#2b8a78; --pale:#eef7f6; --line:#d7e4e8; --white:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; color:var(--ink); background:#f6f9fa; line-height:1.5; }
+    .shell { max-width:960px; margin:0 auto; padding:28px 20px 60px; }
+    header { background:linear-gradient(135deg,#17324d,#246b8f); color:#fff; border-radius:22px; padding:34px clamp(24px,5vw,54px); box-shadow:0 12px 30px #17324d1c; }
+    .eyebrow { text-transform:uppercase; letter-spacing:.13em; font-size:.75rem; font-weight:700; opacity:.8; }
+    h1 { font-size:clamp(2rem,5vw,3.3rem); line-height:1.05; margin:10px 0 14px; }
+    header p { max-width:670px; margin:0; color:#e8f4f7; }
+    .handbook-link { color:#fff; font-weight:750; text-decoration:none; border-bottom:1px solid #bce9e1; }
+    .handbook-link:hover { color:#bce9e1; }
+    .toolbar { display:flex; justify-content:space-between; gap:16px; align-items:center; margin:22px 0; flex-wrap:wrap; }
+    .progress-wrap { flex:1; min-width:230px; }
+    .progress-label { display:flex; justify-content:space-between; font-size:.9rem; color:var(--muted); margin-bottom:7px; }
+    progress { width:100%; height:10px; accent-color:var(--teal); }
+    button { border:0; border-radius:10px; padding:10px 16px; font-weight:700; cursor:pointer; font-size:.95rem; }
+    .reset { background:#e7eef1; color:var(--ink); }
+    section { margin:28px 0; }
+    .section-heading { display:flex; justify-content:space-between; align-items:end; gap:12px; margin-bottom:12px; }
+    h2 { font-size:1.45rem; margin:0; }
+    .section-heading p { color:var(--muted); font-size:.9rem; margin:0; }
+    .question { background:var(--white); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin:10px 0; box-shadow:0 3px 9px #17324d08; }
+    .question.no { border-color:#e3b4a7; background:#fffaf8; }
+    .q-text { margin:0 0 13px; font-weight:650; }
+    .choices { display:flex; gap:9px; flex-wrap:wrap; }
+    .choice { background:#f0f5f6; color:var(--ink); border:1px solid var(--line); }
+    .choice:hover, .choice.selected { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .chapter { margin-top:13px; padding:11px 13px; border-left:4px solid var(--teal); background:var(--pale); color:#244c55; font-size:.92rem; }
+    .chapter a { color:#12677d; font-weight:750; }
+    .summary { background:#17324d; color:#fff; border-radius:16px; padding:24px; margin-top:34px; }
+    .summary h2 { margin-bottom:8px; }
+    .summary p { margin:6px 0; color:#e4f0f2; }
+    .summary a { color:#bce9e1; font-weight:750; }
+    footer { text-align:center; color:var(--muted); font-size:.82rem; margin-top:24px; }
+    @media (max-width:600px) { .shell{padding:14px 12px 40px} header{border-radius:16px;padding:26px 20px} .question{padding:16px} }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="eyebrow">The Digital Epidemiologist’s Handbook</div>
+      <h1>Reflection questionnaire</h1>
+      <p><a class="handbook-link" href="https://app.gitbook.com/o/-LB6jV5O6hp6O90DAvtu/s/gRIHT1hRDQsWTWxmQWt3/" target="_blank" rel="noopener">← Back to the handbook</a></p>
+    </header>
+    <div class="toolbar">
+      <div class="progress-wrap"><div class="progress-label"><span id="progressText">0 answered</span><span id="progressPct">0%</span></div><progress id="progress" value="0"></progress></div>
+      <button class="reset" id="reset" type="button">Reset answers</button>
+    </div>
+    <div class="summary" id="summary"><h2>Your reflection</h2><p>Answer the questions above to see your progress and identify chapters to revisit.</p></div>
+    <div id="questionnaire"></div>
+    <footer>Responses stay in this page and are not sent anywhere. Refreshing the page clears your answers.</footer>
+  </main>
+  <script>
+    const base = 'https://app.gitbook.com/o/-LB6jV5O6hp6O90DAvtu/s/gRIHT1hRDQsWTWxmQWt3/';
+    const links = {
+      activities: base+'initial-assessment/activities-architecture', data: base+'initial-assessment/data-architecture', system: base+'initial-assessment/system-architecture', gap: base+'initial-assessment/gap-analysis',
+      collection: base+'implementation/data-collection', integration: base+'implementation/data-integration', transformation: base+'implementation/data-transformation', communication: base+'implementation/communication-and-visualisation',
+      baseline: base+'monitoring-and-evaluation/baseline-evaluations', kpi: base+'monitoring-and-evaluation/kpi-assessments-and-continuous-improvement'
+    };
+    const sections = [
+      ['Part I: Assessment', [
+        ['Activity architecture', 'activities', ['Do you know the aim of the surveillance?', 'Do you know who produces the data you need, who consumes your outputs, and who controls access to systems and resources?', 'Do you understand what outputs each data consumer needs, in what format, and at what frequency?', 'Have you identified mismatched expectations between stakeholders and your planned outputs?']],
+        ['Data Architecture', 'data', ['Is there an inventory of all data sources feeding into your surveillance pipeline, including the specific variables, collection methods, formats, and frequencies for each?', 'Do you know the date format, location coding system, units of measurement, and clinical coding standards used by each source?', 'Have you assessed the quality, completeness, and timeliness of each data source?', 'Are there data sources you know exist but have not yet been able to access, assess, or connect to your pipeline?', 'Have you documented the data governance framework: legal requirements, data ownership, access protocols, and quality assurance mechanisms?']],
+        ['System Architecture', 'system', ['Do you know which software is used (names, versions, purposes) across your data pipeline?', 'Do you know the storage capacity, backup procedures, and network bandwidth of your infrastructure?', 'Do you know of areas in your data pipeline where there are poor linkages or processes leading to data silos, manual re-entry, or delays?', 'Do you think your current infrastructure could handle increased surveillance capacity?', 'Do you know how the different software and data in your pipeline link together?']],
+        ['Gap analysis', 'gap', ['Do you know every step of your surveillance system from sample collection all the way to reporting?', 'Do you know if each step has a documented standard operating procedure (SOP)?', 'Have you classified each step using a maturity framework (e.g. bronze/silver/gold)?', 'Have you assessed both the impact and the feasibility of each potential improvement before prioritising?']]
+      ]],
+      ['Part II: Implementation', [
+        ['Data collection', 'collection', ['Is your data collection form designed with the data collector in mind (simple, minimal free text)?', 'Is your case definition defined and documented?', 'Do all data providers use a standardised form with the same variable formats and coding?', 'Does your form capture all the information required to apply the case definition?', 'Have you provided a data dictionary to all data providers?', 'Have you considered using established frameworks (e.g. ISARIC ARC) as a starting point for your variable definitions?', 'Does your chosen data collection tool work offline in areas with unreliable internet?']],
+        ['Data integration', 'integration', ['Do you have a single source of truth for each piece of information (no unnecessary duplication)?', 'Have you assigned unique identifiers at every stage of the data pipeline (patient, sample, isolate, test, sequence)?', 'Is your ID scheme documented in the data dictionary and understood by all staff?', 'Is there a defined SOP for data transfer between institutions?', 'Are you transferring only the variables that each recipient needs?', 'Are you using encrypted methods for sensitive data transfer (not email, not USB)?']],
+        ['Data transformation', 'transformation', ['Are you maintaining untouched copies of all raw data?', 'Is your data transformation process scripted or automated (rather than manual copy-paste)?', 'Do you have a clear separation between raw, clean, and analysis-ready data?', 'Do you have an organised filing system with consistent naming conventions?', 'Have you identified which steps are suitable for automation and which require manual flexibility?', 'Are manual steps between two digital systems eliminated where possible?']],
+        ['Communication and visualisation', 'communication', ['Have you mapped which stakeholders need which information, in what format, and how often?', 'Do you have standard templates for recurring reports?', 'Are your visualisations accessible (colour-blind safe, not over-complicated)?', 'Is there an SOP for how results are communicated to different stakeholder groups?']]
+      ]],
+      ['Part III: Monitoring and Evaluation', [
+        ['Baseline evaluations', 'baseline', ['Have you defined baseline metrics before deploying your intervention?', 'Have you agreed with stakeholders on what aspects of the intervention will be monitored (process, impact, ethical)?', 'Are your metrics SMART (specific, measurable, achievable, relevant, time-bound)?', 'Do you have a plan for how you will detect unintended consequences of the intervention?']],
+        ['KPIs and continuous improvement', 'kpi', ['Do you have a schedule for regular performance reviews of the surveillance system?', 'Are you routinely checking for blockers: delays, data quality drops, failed tests?', 'Are automation processes regularly audited to confirm they are functioning correctly?', 'Are evaluation results feeding back into your assessment and implementation cycle?', 'Is the surveillance system’s performance improving over time, or are you seeing stagnation or regression?', 'Have you documented lessons learned from each evaluation cycle for future reference?']]
+      ]]
+    ];
+    const total = sections.reduce((n,s)=>n+s[1].reduce((m,g)=>m+g[2].length,0),0); document.getElementById('progress').max=total;
+    let answers = {};
+    function render(){ const root=document.getElementById('questionnaire'); root.innerHTML=''; let idx=0;
+      sections.forEach(([part, groups])=>{ const sec=document.createElement('section'); sec.innerHTML=`<div class="section-heading"><h2>${part}</h2><p>${groups.length} areas</p></div>`;
+        groups.forEach(([title,key,qs])=>{ const group=document.createElement('div'); group.innerHTML=`<h3>${title}</h3>`; qs.forEach(q=>{ const id='q'+idx++; const card=document.createElement('article'); card.className='question'+(answers[id]==='no'?' no':''); card.innerHTML=`<p class="q-text">${q}</p><div class="choices"><button class="choice ${answers[id]==='yes'?'selected':''}" data-id="${id}" data-value="yes">Yes</button><button class="choice ${answers[id]==='no'?'selected':''}" data-id="${id}" data-value="no">No</button></div>${answers[id]?`<div class="chapter">Read more: <a href="${links[key]}" target="_blank" rel="noopener">${title} chapter</a></div>`:''}`; group.appendChild(card); }); sec.appendChild(group); }); root.appendChild(sec); });
+      root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{answers[b.dataset.id]=b.dataset.value; render(); update();}); update(); }
+    function chapterForIndex(index){ let i=index; for(const [,groups] of sections) for(const [title,key,qs] of groups){ if(i<qs.length) return [title,key]; i-=qs.length; } return null; }
+    function update(){ const n=Object.keys(answers).length, noIds=Object.keys(answers).filter(id=>answers[id]==='no'); const no=noIds.length; document.getElementById('progress').value=n; document.getElementById('progressText').textContent=`${n} of ${total} answered`; document.getElementById('progressPct').textContent=`${Math.round(n/total*100)}%`; const flagged=[...new Map(noIds.map(id=>{const c=chapterForIndex(Number(id.slice(1))); return [c[1],c];})).values()]; const list=flagged.length?`<p><strong>Chapters to review:</strong></p><ul>${flagged.map(([title,key])=>`<li><a href="${links[key]}" target="_blank" rel="noopener">${title}</a></li>`).join('')}</ul>`:''; document.getElementById('summary').innerHTML=n?`<h2>Your reflection</h2><p><strong>${n}</strong> answered · <strong>${no}</strong> chapter${no===1?'':'s'} flagged for review.</p>${list}`:`<h2>Your reflection</h2><p>Answer the questions below to see your progress and identify chapters to revisit.</p>`; }
+    document.getElementById('reset').onclick=()=>{answers={};render();}; render();
+  </script>
+</body>
+</html>
